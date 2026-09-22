@@ -1128,13 +1128,17 @@
             element.classList.toggle('open');
         }
 
-        // GESTIONE DEL POP-UP E INSTALLAZIONE PWA
+        // GESTIONE DEL POP-UP E INSTALLAZIONE PWA (MODIFICATO PER FORZARE LA APERTURA)
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.getElementById('pwaPopup').style.display = 'flex';
+            }, 1000);
+        });
+
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // Mostra il pop-up appena il browser conferma che l'app è installabile
-            document.getElementById('pwaPopup').style.display = 'flex';
         });
 
         // Funzione per chiudere il pop-up se l'utente preferisce il sito
