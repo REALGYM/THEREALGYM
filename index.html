@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REAL GYM - Train Hard</title>
-    <!-- COLLEGAMENTO PWA MANIFEST -->
+    
+    <!-- COLLEGAMENTO PWA MANIFEST E ICONA -->
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="icona.png">
+    <link rel="apple-touch-icon" href="icona.png">
+    
     <meta name="theme-color" content="#FF0000">
     <style>
         * {
@@ -254,7 +258,7 @@
             margin-top: 2px;
         }
 
-        /* IMMAGINE IN VETRINA (FOTOPALESTRAHOME.JFIF) */
+        /* IMMAGINE IN VETRINA */
         .showcase-image-container {
             width: 100%;
             max-width: 650px;
@@ -273,7 +277,6 @@
             max-height: 350px;
         }
 
-        /* CONTAINER SPECIFICO PER IMMAGINE TRAINER (INTERA SENZA TAGLI) */
         .trainer-image-container {
             width: 100%;
             max-width: 650px;
@@ -336,7 +339,6 @@
             justify-content: space-between;
         }
 
-        /* CARDS GRIDS */
         .card-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -393,7 +395,6 @@
             font-size: 1.25rem;
         }
 
-        /* AFFLUENZA GRAPH */
         .traffic-graph {
             display: flex;
             align-items: flex-end;
@@ -432,7 +433,6 @@
             font-weight: bold;
         }
 
-        /* TABELLA ORARI */
         .hours-list {
             display: flex;
             flex-direction: column;
@@ -495,7 +495,6 @@
             text-transform: uppercase;
         }
 
-        /* COLLAB BRANDS */
         .collab-brands-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -531,7 +530,6 @@
             margin-top: 5px;
         }
 
-        /* SOCIAL & ADDRESS */
         .social-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -579,7 +577,6 @@
             font-weight: normal;
         }
 
-        /* CALCOLATORI & FORM */
         .calc-box {
             background-color: rgba(18, 18, 18, 0.9);
             border-radius: 8px;
@@ -614,7 +611,6 @@
             font-weight: bold;
         }
 
-        /* FAQ STILI */
         .faq-item {
             background-color: rgba(20, 20, 20, 0.9);
             border: 1px solid #333;
@@ -651,7 +647,6 @@
             display: block;
         }
 
-        /* WHATSAPP FLOAT */
         .whatsapp-float {
             position: fixed;
             bottom: 20px;
@@ -763,7 +758,7 @@
     <div class="pwa-popup-overlay" id="pwaPopup">
         <div class="pwa-popup-box">
             <h3>Scarica l'App Real Gym</h3>
-            <p>Installa subito l'applicazione ufficiale sulla schermata Home del tuo telefono per un accesso rapido e senza errori!</p>
+            <p id="pwaPopupText">Installa subito l'applicazione ufficiale sulla schermata Home del tuo telefono per un accesso rapido e senza errori!</p>
             <button class="pwa-install-btn" id="pwaInstallButton">📥 Installa Subito</button>
             <br>
             <button class="pwa-close-btn" onclick="closePwaPopup()">Continua sul sito web</button>
@@ -820,7 +815,6 @@
         </div>
     </div>
 
-    <!-- IMMAGINE IN VETRINA CON ID DEDICATO (FOTOPALESTRAHOME.JFIF) -->
     <div class="showcase-image-container" id="homeImageContainer">
         <img src="fotopalestrahome.jfif" alt="Real Gym Interno" onerror="this.onerror=null; this.parentElement.style.display='none';">
     </div>
@@ -984,7 +978,7 @@
             </div>
         </div>
 
-        <!-- SEZIONE TRAINER & STAFF AGGIORNATA CON FOTOPERSONALTRAINER A DIMENSIONI INTERE -->
+        <!-- SEZIONE TRAINER & STAFF -->
         <div id="section-trainer" class="dynamic-section">
             <div class="section-box">
                 <div class="section-title">💪 Trainer & Staff</div>
@@ -1128,10 +1122,24 @@
             element.classList.toggle('open');
         }
 
-        // GESTIONE DEL POP-UP E INSTALLAZIONE PWA (MODIFICATO PER FORZARE LA APERTURA)
+        // RILEVAMENTO DISPOSITIVO IOS / iPHONE
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
+        // GESTIONE DEL POP-UP E INSTALLAZIONE PWA
         window.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
-                document.getElementById('pwaPopup').style.display = 'flex';
+                const popup = document.getElementById('pwaPopup');
+                const textElem = document.getElementById('pwaPopupText');
+                const btnElem = document.getElementById('pwaInstallButton');
+
+                if (isIOS()) {
+                    textElem.innerHTML = "Per installare l'app su iPhone:<br>1. Tocca il tasto <b>Condividi</b> <span style='font-size:1.2rem;'>⎋</span> in basso su Safari.<br>2. Seleziona <b>'Aggiungi alla schermata Home'</b>.";
+                    btnElem.style.display = 'none'; 
+                }
+
+                popup.style.display = 'flex';
             }, 1000);
         });
 
@@ -1141,12 +1149,10 @@
             deferredPrompt = e;
         });
 
-        // Funzione per chiudere il pop-up se l'utente preferisce il sito
         function closePwaPopup() {
             document.getElementById('pwaPopup').style.display = 'none';
         }
 
-        // Azione al click sul pulsante "Installa Subito" nel pop-up
         document.getElementById('pwaInstallButton').addEventListener('click', async () => {
             document.getElementById('pwaPopup').style.display = 'none';
             if (deferredPrompt) {
@@ -1154,11 +1160,11 @@
                 const { outcome } = await deferredPrompt.userChoice;
                 deferredPrompt = null;
             } else {
-                alert("Per installare l'app, usa il menu del tuo browser (es. 'Aggiungi a schermata Home' o 'Installa app').");
+                alert("Per installare l'app, usa il menu del tuo browser.");
             }
         });
 
-        // REGISTRAZIONE SERVICE WORKER PER LA PWA
+        // REGISTRAZIONE SERVICE WORKER
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('sw.js')
