@@ -678,9 +678,97 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
+        /* --- STILI DEL POP-UP INSTALLAZIONE APP --- */
+        .pwa-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .pwa-popup-box {
+            background: #111;
+            border: 2px solid #FF0000;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 400px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+            animation: popupScale 0.3s ease-in-out;
+        }
+
+        @keyframes popupScale {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .pwa-popup-box h3 {
+            color: #FF0000;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .pwa-popup-box p {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .pwa-install-btn {
+            background-color: #FF0000;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        .pwa-close-btn {
+            background: transparent;
+            color: #888;
+            border: none;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 5px;
+        }
+
+        .pwa-close-btn:hover {
+            color: #fff;
+        }
     </style>
 </head>
 <body>
+
+    <!-- POP-UP DI INVITO AL DOWNLOAD DELL'APP -->
+    <div class="pwa-popup-overlay" id="pwaPopup">
+        <div class="pwa-popup-box">
+            <h3>Scarica l'App Real Gym</h3>
+            <p>Installa subito l'applicazione ufficiale sulla schermata Home del tuo telefono per un accesso rapido e senza errori!</p>
+            <button class="pwa-install-btn" id="pwaInstallButton">📥 Installa Subito</button>
+            <br>
+            <button class="pwa-close-btn" onclick="closePwaPopup()">Continua sul sito web</button>
+        </div>
+    </div>
 
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
@@ -1039,6 +1127,32 @@
         function toggleFaq(element) {
             element.classList.toggle('open');
         }
+
+        // GESTIONE DEL POP-UP E INSTALLAZIONE PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Mostra il pop-up appena il browser conferma che l'app è installabile
+            document.getElementById('pwaPopup').style.display = 'flex';
+        });
+
+        // Funzione per chiudere il pop-up se l'utente preferisce il sito
+        function closePwaPopup() {
+            document.getElementById('pwaPopup').style.display = 'none';
+        }
+
+        // Azione al click sul pulsante "Installa Subito" nel pop-up
+        document.getElementById('pwaInstallButton').addEventListener('click', async () => {
+            document.getElementById('pwaPopup').style.display = 'none';
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            } else {
+                alert("Per installare l'app, usa il menu del tuo browser (es. 'Aggiungi a schermata Home' o 'Installa app').");
+            }
+        });
 
         // REGISTRAZIONE SERVICE WORKER PER LA PWA
         if ('serviceWorker' in navigator) {
