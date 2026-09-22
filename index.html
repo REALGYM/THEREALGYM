@@ -1054,6 +1054,15 @@
     </footer>
 
     <script>
+        // REGISTRAZIONE DEL SERVICE WORKER PER LA PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrato con successo:', reg.scope))
+                    .catch(err => console.log('Registrazione Service Worker fallita:', err));
+            });
+        }
+
         function checkGymStatus() {
             const now = new Date();
             const day = now.getDay(); 
