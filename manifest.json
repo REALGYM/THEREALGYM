@@ -1,19 +1,19 @@
 {
   "name": "REAL GYM",
   "short_name": "RealGym",
-  "start_url": "/",
+  "start_url": "/THEREALGYM/",
+  "scope": "/THEREALGYM/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#FF0000",
-  "orientation": "portrait",
   "icons": [
     {
-      "src": "logo.png",
+      "src": "/THEREALGYM/logo.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "logo.png",
+      "src": "/THEREALGYM/logo.png",
       "sizes": "512x512",
       "type": "image/png"
     }
