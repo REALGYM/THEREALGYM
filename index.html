@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REAL GYM - Train Hard</title>
     
-    <!-- COLLEGAMENTO PWA MANIFEST E ICONA -->
-    <link rel="manifest" href="manifest.json">
+    <!-- ICONA DEL SITO -->
     <link rel="icon" type="image/png" href="icona.png">
-    <link rel="apple-touch-icon" href="icona.png">
     
     <meta name="theme-color" content="#FF0000">
     <style>
@@ -673,97 +671,9 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-
-        /* --- STILI DEL POP-UP INSTALLAZIONE APP --- */
-        .pwa-popup-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .pwa-popup-box {
-            background: #111;
-            border: 2px solid #FF0000;
-            border-radius: 12px;
-            width: 100%;
-            max-width: 400px;
-            padding: 25px 20px;
-            text-align: center;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
-            animation: popupScale 0.3s ease-in-out;
-        }
-
-        @keyframes popupScale {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .pwa-popup-box h3 {
-            color: #FF0000;
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .pwa-popup-box p {
-            color: #ccc;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            margin-bottom: 20px;
-        }
-
-        .pwa-install-btn {
-            background-color: #FF0000;
-            color: #fff;
-            border: none;
-            width: 100%;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
-        }
-
-        .pwa-close-btn {
-            background: transparent;
-            color: #888;
-            border: none;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            font-weight: bold;
-            padding: 5px;
-            width: 100%;
-        }
-
-        .pwa-close-btn:hover {
-            color: #fff;
-        }
     </style>
 </head>
 <body>
-
-    <!-- POP-UP DI INVITO AL DOWNLOAD DELL'APP -->
-    <div class="pwa-popup-overlay" id="pwaPopup">
-        <div class="pwa-popup-box">
-            <h3>THE REAL GYM APP</h3>
-            <p id="pwaPopupText">Porta sempre con te la tua palestra: scarica l'applicazione per accedere rapidamente a schede, orari e offerte esclusive!</p>
-            <button class="pwa-install-btn" id="pwaInstallButton">Scarica l'app</button>
-            <button class="pwa-close-btn" onclick="closePwaPopup()">Continua sul sito web</button>
-        </div>
-    </div>
 
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
@@ -1054,15 +964,6 @@
     </footer>
 
     <script>
-        // REGISTRAZIONE DEL SERVICE WORKER PER LA PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                    .then(reg => console.log('Service Worker registrato con successo:', reg.scope))
-                    .catch(err => console.log('Registrazione Service Worker fallita:', err));
-            });
-        }
-
         function checkGymStatus() {
             const now = new Date();
             const day = now.getDay(); 
@@ -1130,48 +1031,6 @@
         function toggleFaq(element) {
             element.classList.toggle('open');
         }
-
-        // RILEVAMENTO DISPOSITIVO IOS / iPHONE
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
-        // GESTIONE DEL POP-UP E INSTALLAZIONE PWA
-        window.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const popup = document.getElementById('pwaPopup');
-                const textElem = document.getElementById('pwaPopupText');
-                const btnElem = document.getElementById('pwaInstallButton');
-
-                if (isIOS()) {
-                    textElem.innerHTML = "Per installare l'app su iPhone:<br>1. Tocca il tasto <b>Condividi</b> <span style='font-size:1.2rem;'>⎋</span> in basso su Safari.<br>2. Seleziona <b>'Aggiungi alla schermata Home'</b>.";
-                    btnElem.style.display = 'none'; 
-                }
-
-                popup.style.display = 'flex';
-            }, 1000);
-        });
-
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
-
-        function closePwaPopup() {
-            document.getElementById('pwaPopup').style.display = 'none';
-        }
-
-        document.getElementById('pwaInstallButton').addEventListener('click', async () => {
-            document.getElementById('pwaPopup').style.display = 'none';
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-            } else {
-                alert("Per installare l'app, usa il menu del tuo browser.");
-            }
-        });
     </script>
 </body>
 </html>
